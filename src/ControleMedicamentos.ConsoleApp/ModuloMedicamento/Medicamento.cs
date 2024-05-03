@@ -2,35 +2,40 @@
 
 namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
 {
-    public class Medicamento : Entidade
+    internal class Medicamento : Entidade
     {
-        public string Nome { get; set; }
-        public string Descricao { get; set; }
-        public int Quantidade { get; set; }
-
-        public Medicamento(string nome, string descricao, int quantidade)
+        public Medicamento(string nome, string descricao, string lote, DateTime dataValidade)
         {
             Nome = nome;
             Descricao = descricao;
-            Quantidade = quantidade;
+            Lote = lote;
+            DataValidade = dataValidade;
         }
 
-        public string[] Validar()
+        public string Nome { get; set; }
+        public string Descricao { get; set; }
+        public string Lote { get; set; }
+        private DateTime DataValidade { get; set; }
+        public int Quantidade { get; set; } = 5;
+
+        public override string[] Validar()
         {
-            string[] erros = new string[2];
+            string[] erros = new string[3];
             int contadorErros = 0;
 
-            if (Nome.Length < 3)
-            {
-                erros[0] = "O Nome do Medicamento precisa conter ao menos 3 caracteres";
-                contadorErros++;
-            }
+            if (string.IsNullOrEmpty(Nome.Trim()))
+                erros[contadorErros++] = ("O campo \"nome\" é obrigatório");
 
-            if (Descricao.Length < 3)
-            {
-                erros[1] = "A Descrição do Medicamento precisa conter ao menos 3 caracteres";
-                contadorErros++;
-            }
+            if (string.IsNullOrEmpty(Descricao.Trim()))
+                erros[contadorErros++] = ("O campo \"descrição\" é obrigatório");
+
+            if (string.IsNullOrEmpty(Lote.Trim()))
+                erros[contadorErros++] = ("O campo \"lote\" é obrigatório");
+
+            DateTime hoje = DateTime.Now.Date;
+
+            if (DataValidade < hoje)
+                erros[contadorErros++] = ("O campo \"data de validade\" não pode ser menor que a data atual");
 
             string[] errosFiltrados = new string[contadorErros];
 

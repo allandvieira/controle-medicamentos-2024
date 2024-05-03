@@ -2,125 +2,13 @@
 
 namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
 {
-    public class TelaPaciente
+    internal class TelaPaciente : TelaBase
     {
-        public RepositorioPaciente repositorio = new RepositorioPaciente();
-
-        public char ApresentarMenu()
-        {
-            Console.Clear();
-
-            Console.WriteLine("----------------------------------------");
-            Console.WriteLine("|        Gestão de Pacientes           |");
-            Console.WriteLine("----------------------------------------");
-
-            Console.WriteLine();
-
-            Console.WriteLine("1 - Cadastrar Paciente");
-            Console.WriteLine("2 - Editar Paciente");
-            Console.WriteLine("3 - Excluir Paciente");
-            Console.WriteLine("4 - Visualizar Pacientes");
-
-            Console.WriteLine("S - Voltar");
-
-            Console.WriteLine();
-
-            Console.Write("Escolha uma das opções: ");
-            char operacaoEscolhida = Convert.ToChar(Console.ReadLine());
-
-            return operacaoEscolhida;
-        }
-
-        public void CadastrarPaciente()
-        {
-            Console.Clear();
-
-            Console.WriteLine("----------------------------------------");
-            Console.WriteLine("|        Gestão de Pacientes           |");
-            Console.WriteLine("----------------------------------------");
-
-            Console.WriteLine();
-
-            Console.WriteLine("Cadastrando Paciente...");
-
-            Console.WriteLine();
-
-            Console.Write("Digite o nome do paciente: ");
-            string nome = Console.ReadLine();
-
-            Console.Write("Digite o endereço do paciente: ");
-            string endereco = Console.ReadLine();
-
-            Paciente novoPaciente = new Paciente(nome, endereco);
-
-            repositorio.Cadastrar(novoPaciente);
-
-            Console.WriteLine("Paciente cadastrado com sucesso!");
-        }
-
-        public void EditarPaciente()
-        {
-            Console.Clear();
-
-            Console.WriteLine("----------------------------------------");
-            Console.WriteLine("|        Gestão de Pacientes           |");
-            Console.WriteLine("----------------------------------------");
-
-            Console.WriteLine();
-
-            Console.WriteLine("Editando Paciente...");
-
-            Console.WriteLine();
-
-            Console.Write("Digite o ID do paciente que deseja editar: ");
-            int idPaciente = Convert.ToInt32(Console.ReadLine());
-
-            Console.Write("Digite o novo nome do paciente: ");
-            string nome = Console.ReadLine();
-
-            Console.Write("Digite o novo endereço do paciente: ");
-            string endereco = Console.ReadLine();
-
-            Paciente novoPaciente = new Paciente(nome, endereco);
-
-            repositorio.Editar(idPaciente, novoPaciente);
-
-            Console.WriteLine("Paciente editado com sucesso!");
-        }
-
-        public void ExcluirPaciente()
-        {
-            Console.Clear();
-
-            Console.WriteLine("----------------------------------------");
-            Console.WriteLine("|        Gestão de Pacientes           |");
-            Console.WriteLine("----------------------------------------");
-
-            Console.WriteLine();
-
-            Console.WriteLine("Excluindo Paciente...");
-
-            Console.WriteLine();
-
-            Console.Write("Digite o ID do paciente que deseja excluir: ");
-            int idPaciente = Convert.ToInt32(Console.ReadLine());
-
-            repositorio.Excluir(idPaciente);
-
-            Console.WriteLine("Paciente excluído com sucesso!");
-        }
-
-        public void VisualizarPacientes(bool exibirTitulo)
+        public override void VisualizarRegistros(bool exibirTitulo)
         {
             if (exibirTitulo)
             {
-                Console.Clear();
-
-                Console.WriteLine("----------------------------------------");
-                Console.WriteLine("|        Gestão de Pacientes           |");
-                Console.WriteLine("----------------------------------------");
-
-                Console.WriteLine();
+                ApresentarCabecalho();
 
                 Console.WriteLine("Visualizando Pacientes...");
             }
@@ -128,25 +16,51 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
             Console.WriteLine();
 
             Console.WriteLine(
-                "{0, -10} | {1, -15} | {2, -15}",
-                "Id", "Nome", "Endereço"
+                "{0, -10} | {1, -15} | {2, -15} | {3, -15} | {4, -15}",
+                "Id", "Nome", "Endereco", "Telefone", "Cartão do SUS"
             );
 
             Entidade[] pacientesCadastrados = repositorio.SelecionarTodos();
 
-            foreach (Paciente pac in pacientesCadastrados)
+            foreach (Paciente paciente in pacientesCadastrados)
             {
-                if (pac == null)
+                if (paciente == null)
                     continue;
 
                 Console.WriteLine(
-                    "{0, -10} | {1, -15} | {2, -15}",
-                    pac.Id, pac.Nome, pac.Endereco
+                    "{0, -10} | {1, -15} | {2, -15} | {3, -15} | {4, -15}",
+                    paciente.Id, paciente.Nome, paciente.Endereco, paciente.Telefone, paciente.CartaoSus
                 );
             }
 
             Console.ReadLine();
             Console.WriteLine();
+        }
+
+        protected override Entidade ObterRegistro()
+        {
+            Console.Write("Digite o nome do paciente: ");
+            string nome = Console.ReadLine();
+
+            Console.Write("Digite o endereço do paciente: ");
+            string endereco = Console.ReadLine();
+
+            Console.Write("Digite o telefone do paciente ('49 98765-4321': ");
+            string telefone = Console.ReadLine();
+
+            Console.Write("Digite o cartão do SUS do paciente (15 números): ");
+            string cartaoSus = Console.ReadLine();
+
+            Paciente novoPaciente = new Paciente(nome, endereco, telefone, cartaoSus);
+
+            return novoPaciente;
+        }
+
+        public void CadastrarEntidadeTeste()
+        {
+            Paciente paciente = new Paciente("Jota Silva", "Rua J5", "49 99876-5432", "123456789012345");
+
+            repositorio.Cadastrar(paciente);
         }
     }
 }

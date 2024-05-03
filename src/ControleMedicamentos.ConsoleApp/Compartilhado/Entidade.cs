@@ -1,7 +1,9 @@
 ﻿namespace ControleMedicamentos.ConsoleApp.Compartilhado
 {
-    public class Entidade
+    internal abstract class Entidade
     {
         public int Id { get; set; }
+
+        public abstract string[] Validar();
     }
 }

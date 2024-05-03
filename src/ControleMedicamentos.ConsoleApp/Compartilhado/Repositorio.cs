@@ -1,8 +1,6 @@
-﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
-
-namespace ControleMedicamentos.ConsoleApp.Compartilhado
+﻿namespace ControleMedicamentos.ConsoleApp.Compartilhado
 {
-    public class Repositorio
+    internal abstract class Repositorio
     {
         protected Entidade[] registros = new Entidade[100];
 

@@ -1,6 +1,7 @@
-﻿using ControleMedicamentos.ConsoleApp.ModuloChamado;
+﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
 using ControleMedicamentos.ConsoleApp.ModuloMedicamento;
 using ControleMedicamentos.ConsoleApp.ModuloPaciente;
+using ControleMedicamentos.ConsoleApp.ModuloRequisicao;
 
 namespace ControleMedicamentos.ConsoleApp
 {
@@ -8,111 +9,66 @@ namespace ControleMedicamentos.ConsoleApp
     {
         static void Main(string[] args)
         {
-            TelaMedicamento telaMedicamento = new TelaMedicamento();
+            RepositorioPaciente repositorioPaciente = new RepositorioPaciente();
+
             TelaPaciente telaPaciente = new TelaPaciente();
-            TelaChamado telaChamado = new TelaChamado(telaMedicamento, telaPaciente);
+            telaPaciente.tipoEntidade = "Paciente";
+            telaPaciente.repositorio = repositorioPaciente;
 
-            telaMedicamento.SetTelaChamado(telaChamado);
+            telaPaciente.CadastrarEntidadeTeste();
 
-            bool opcaoSairEscolhida = false;
+            RepositorioMedicamento repositorioMedicamento = new RepositorioMedicamento();
+            TelaMedicamento telaMedicamento = new TelaMedicamento();
+            telaMedicamento.repositorio = repositorioMedicamento;
+            telaMedicamento.tipoEntidade = "Medicamento";
 
-            while (!opcaoSairEscolhida)
+            RepositorioRequisicaoSaida repositorioRequisicaoSaida = new RepositorioRequisicaoSaida();
+
+            TelaRequisicaoSaida telaRequisicaoSaida = new TelaRequisicaoSaida();
+            telaRequisicaoSaida.repositorio = repositorioRequisicaoSaida;
+            telaRequisicaoSaida.tipoEntidade = "Requisição";
+
+            telaRequisicaoSaida.telaPaciente = telaPaciente;
+            telaRequisicaoSaida.telaMedicamento = telaMedicamento;
+
+            telaRequisicaoSaida.repositorioPaciente = repositorioPaciente;
+            telaRequisicaoSaida.repositorioMedicamento = repositorioMedicamento;
+
+            while (true)
             {
-                char opcaoPrincipalEscolhida = ApresentarMenuPrincipal();
+                char opcaoPrincipalEscolhida = TelaPrincipal.ApresentarMenuPrincipal();
 
-                switch (opcaoPrincipalEscolhida)
-                {
-                    case '1':
-                        char operacaoMedicamentoEscolhida = telaMedicamento.ApresentarMenu();
+                if (opcaoPrincipalEscolhida == 'S' || opcaoPrincipalEscolhida == 's')
+                    break;
 
-                        if (operacaoMedicamentoEscolhida == '1')
-                            telaMedicamento.CadastrarMedicamento();
+                TelaBase tela = null;
 
-                        else if (operacaoMedicamentoEscolhida == '2')
-                            telaMedicamento.EditarMedicamento();
+                if (opcaoPrincipalEscolhida == '1')
+                    tela = telaPaciente;
 
-                        else if (operacaoMedicamentoEscolhida == '3')
-                            telaMedicamento.ExcluirMedicamento();
+                else if (opcaoPrincipalEscolhida == '2')
+                    tela = telaMedicamento;
 
-                        else if (operacaoMedicamentoEscolhida == '4')
-                            telaMedicamento.VisualizarMedicamentos(true);
+                else if (opcaoPrincipalEscolhida == '3')
+                    tela = telaRequisicaoSaida;
 
-                        break;
+                char operacaoEscolhida = tela.ApresentarMenu();
 
-                    case '2':
-                        char operacaoChamadoEscolhida = telaChamado.ApresentarMenu();
+                if (operacaoEscolhida == 'S' || operacaoEscolhida == 's')
+                    continue;
 
-                        if (operacaoChamadoEscolhida == '1')
-                            telaChamado.CadastrarChamado();
+                if (operacaoEscolhida == '1')
+                    tela.Registrar();
 
-                        else if (operacaoChamadoEscolhida == '2')
-                            telaChamado.EditarChamado();
+                else if (operacaoEscolhida == '2')
+                    tela.Editar();
 
-                        else if (operacaoChamadoEscolhida == '3')
-                            telaChamado.ExcluirChamado();
+                else if (operacaoEscolhida == '3')
+                    tela.Excluir();
 
-                        else if (operacaoChamadoEscolhida == '4')
-                            telaChamado.VisualizarChamados(true);
-
-                        break;
-
-                    case '3':
-                        char operacaoPacienteEscolhida = telaPaciente.ApresentarMenu();
-
-                        if (operacaoPacienteEscolhida == '1')
-                            telaPaciente.CadastrarPaciente();
-
-                        else if (operacaoPacienteEscolhida == '2')
-                            telaPaciente.EditarPaciente();
-
-                        else if (operacaoPacienteEscolhida == '3')
-                            telaPaciente.ExcluirPaciente();
-
-                        else if (operacaoPacienteEscolhida == '4')
-                            telaPaciente.VisualizarPacientes(true);
-
-                        break;
-
-                    default: opcaoSairEscolhida = true; break;
-                }
+                else if (operacaoEscolhida == '4')
+                    tela.VisualizarRegistros(true);
             }
-
-            Console.ReadLine();
-        }
-
-        private static char ApresentarMenuPrincipal()
-        {
-            Console.Clear();
-
-            Console.WriteLine("----------------------------------------");
-            Console.WriteLine("|        Gestão de Medicamentos        |");
-            Console.WriteLine("----------------------------------------");
-
-            Console.WriteLine();
-
-            Console.WriteLine("1 - Gerência de Medicamentos");
-            Console.WriteLine("2 - Gerência de Requisições");
-            Console.WriteLine("3 - Gerência de Pacientes");
-            Console.WriteLine("S - Sair");
-
-            Console.WriteLine();
-
-            Console.Write("Escolha uma das opções: ");
-
-            char opcaoEscolhida = Console.ReadLine()[0];
-
-            return opcaoEscolhida;
-        }
-
-        public static void ExibirMensagem(string mensagem, ConsoleColor cor)
-        {
-            Console.ForegroundColor = cor;
-
-            Console.WriteLine();
-
-            Console.WriteLine(mensagem);
-
-            Console.ResetColor();
 
             Console.ReadLine();
         }
