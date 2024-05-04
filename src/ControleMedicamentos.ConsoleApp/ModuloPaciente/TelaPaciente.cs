@@ -4,6 +4,34 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
 {
     internal class TelaPaciente : TelaBase
     {
+        public override void Registrar()
+        {
+            ApresentarCabecalho();
+
+            Console.WriteLine($"Cadastrando {tipoEntidade}...");
+
+            Console.WriteLine();
+
+            Paciente paciente = (Paciente)ObterRegistro();
+
+            if (((RepositorioPaciente)repositorio).ExisteCartaoSus(paciente.CartaoSus))
+            {
+                ExibirMensagem("O Cartão do SUS já está cadastrado para outro paciente", ConsoleColor.Red);
+                return;
+            }
+
+            string[] erros = paciente.Validar();
+
+            if (erros.Length > 0)
+            {
+                ApresentarErros(erros);
+                return;
+            }
+
+            repositorio.Cadastrar(paciente);
+
+            ExibirMensagem($"O {tipoEntidade} foi cadastrado com sucesso!", ConsoleColor.Green);
+        }
         public override void VisualizarRegistros(bool exibirTitulo)
         {
             if (exibirTitulo)
