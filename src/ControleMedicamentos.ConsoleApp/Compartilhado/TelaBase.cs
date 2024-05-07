@@ -1,21 +1,19 @@
-﻿namespace ControleMedicamentos.ConsoleApp.Compartilhado
+﻿using System.Collections;
+
+namespace ControleMedicamentos.ConsoleApp.Compartilhado
 {
     internal abstract class TelaBase
     {
         public string tipoEntidade = "";
-        public Repositorio repositorio = null;
+        public RepositorioBase repositorio = null;
 
         public char ApresentarMenu()
         {
             Console.Clear();
 
-            string titulo = $"Gestão de {tipoEntidade}s";
-            int larguraLinha = 40;
-            int padding = (larguraLinha - titulo.Length) / 2;
-
-            Console.WriteLine(new string('-', larguraLinha));
-            Console.WriteLine("|" + titulo.PadLeft(padding + titulo.Length).PadRight(larguraLinha - 2) + "|");
-            Console.WriteLine(new string('-', larguraLinha));
+            Console.WriteLine("----------------------------------------");
+            Console.WriteLine($"        Gestão de {tipoEntidade}s        ");
+            Console.WriteLine("----------------------------------------");
 
             Console.WriteLine();
 
@@ -34,19 +32,11 @@
             return operacaoEscolhida;
         }
 
-        public virtual void Registrar()
+        protected void InserirRegistro(EntidadeBase entidade)
         {
-            ApresentarCabecalho();
+            ArrayList erros = entidade.Validar();
 
-            Console.WriteLine($"Cadastrando {tipoEntidade}...");
-
-            Console.WriteLine();
-
-            Entidade entidade = ObterRegistro();
-
-            string[] erros = entidade.Validar();
-
-            if (erros.Length > 0)
+            if (erros.Count > 0)
             {
                 ApresentarErros(erros);
                 return;
@@ -55,6 +45,19 @@
             repositorio.Cadastrar(entidade);
 
             ExibirMensagem($"O {tipoEntidade} foi cadastrado com sucesso!", ConsoleColor.Green);
+        }
+
+        public virtual void Registrar()
+        {
+            ApresentarCabecalho();
+
+            Console.WriteLine($"Cadastrando {tipoEntidade}...");
+
+            Console.WriteLine();
+
+            EntidadeBase entidade = ObterRegistro();
+
+            InserirRegistro(entidade);
         }
 
         public void Editar()
@@ -78,11 +81,11 @@
 
             Console.WriteLine();
 
-            Entidade entidade = ObterRegistro();
+            EntidadeBase entidade = ObterRegistro();
 
-            string[] erros = entidade.Validar();
+            ArrayList erros = entidade.Validar();
 
-            if (erros.Length > 0)
+            if (erros.Count > 0)
             {
                 ApresentarErros(erros);
                 return;
@@ -131,11 +134,11 @@
 
         public abstract void VisualizarRegistros(bool exibirTitulo);
 
-        protected void ApresentarErros(string[] erros)
+        protected void ApresentarErros(ArrayList erros)
         {
             Console.ForegroundColor = ConsoleColor.Red;
 
-            for (int i = 0; i < erros.Length; i++)
+            for (int i = 0; i < erros.Count; i++)
                 Console.WriteLine(erros[i]);
 
             Console.ResetColor();
@@ -166,6 +169,6 @@
             Console.ReadLine();
         }
 
-        protected abstract Entidade ObterRegistro();
+        protected abstract EntidadeBase ObterRegistro();
     }
 }

@@ -1,21 +1,19 @@
-﻿
-
-using ControleMedicamentos.ConsoleApp.Compartilhado;
+﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
 using System.Collections;
 
-namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
+namespace ControleMedicamentos.ConsoleApp.ModuloFuncionario
 {
-    internal class Paciente : EntidadeBase
+    internal class Funcionario : EntidadeBase
     {
         public string Nome { get; set; }
         public string Telefone { get; set; }
-        public string CartaoSus { get; set; }
+        public string CPF { get; set; }
 
-        public Paciente(string nome, string telefone, string cartaoSus)
+        public Funcionario(string nome, string telefone, string cpf)
         {
             Nome = nome;
             Telefone = telefone;
-            CartaoSus = cartaoSus;
+            CPF = cpf;
         }
 
         public override ArrayList Validar()
@@ -28,8 +26,8 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
             if (string.IsNullOrEmpty(Telefone.Trim()))
                 erros.Add("O campo \"telefone\" é obrigatório");
 
-            if (string.IsNullOrEmpty(CartaoSus.Trim()))
-                erros.Add("O campo \"Cartão do SUS\" é obrigatório");
+            if (string.IsNullOrEmpty(CPF.Trim()))
+                erros.Add("O campo \"CPF\" é obrigatório");
 
             return erros;
         }

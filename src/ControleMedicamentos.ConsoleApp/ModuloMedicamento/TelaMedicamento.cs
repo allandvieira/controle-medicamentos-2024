@@ -1,9 +1,14 @@
 ﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
+using ControleMedicamentos.ConsoleApp.ModuloFornecedor;
+using System.Collections;
 
 namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
 {
     internal class TelaMedicamento : TelaBase
     {
+        public TelaFornecedor telaFornecedor = null;
+        public RepositorioFornecedor repositorioFornecedor = null;
+
         public override void VisualizarRegistros(bool exibirTitulo)
         {
             if (exibirTitulo)
@@ -16,11 +21,11 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
             Console.WriteLine();
 
             Console.WriteLine(
-                "{0, -10} | {1, -20} | {2, -20}",
-                "Id", "Nome", "Quantidade"
+                "{0, -10} | {1, -20} | {2, -20} | {3, -20}",
+                "Id", "Nome", "Fornecedor", "Quantidade"
             );
 
-            Entidade[] medicamentosCadastrados = repositorio.SelecionarTodos();
+            ArrayList medicamentosCadastrados = repositorio.SelecionarTodos();
 
             foreach (Medicamento medicamento in medicamentosCadastrados)
             {
@@ -28,8 +33,8 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
                     continue;
 
                 Console.WriteLine(
-                    "{0, -10} | {1, -20} | {2, -20}",
-                    medicamento.Id, medicamento.Nome, medicamento.Quantidade
+                    "{0, -10} | {1, -20} | {2, -20} | {3, -20}",
+                    medicamento.Id, medicamento.Nome, medicamento.Fornecedor.Nome, medicamento.Quantidade
                 );
             }
 
@@ -37,7 +42,7 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
             Console.WriteLine();
         }
 
-        protected override Entidade ObterRegistro()
+        protected override EntidadeBase ObterRegistro()
         {
             Console.Write("Digite o nome: ");
             string nome = Console.ReadLine();
@@ -51,9 +56,28 @@ namespace ControleMedicamentos.ConsoleApp.ModuloMedicamento
             Console.Write("Digite a data de validade: ");
             DateTime dataValidade = Convert.ToDateTime(Console.ReadLine());
 
-            Medicamento medicamento = new Medicamento(nome, descricao, lote, dataValidade);
+            Console.Write("Digite a quantidade disponivel do medicamento: ");
+            int quantidade = Convert.ToInt32(Console.ReadLine());
 
-            return medicamento;
+            telaFornecedor.VisualizarRegistros(false);
+
+            Console.Write("Digite o ID do fornecedor do medicamento: ");
+            int idFornecedor = Convert.ToInt32(Console.ReadLine());
+
+            Fornecedor fornecedor = (Fornecedor)repositorioFornecedor.SelecionarPorId(idFornecedor);
+
+            return new Medicamento(nome, descricao, lote, dataValidade, fornecedor, quantidade);
+        }
+
+        public void CadastrarEntidadeTeste()
+        {
+            Fornecedor fornecedor = (Fornecedor)repositorioFornecedor.SelecionarTodos()[0];
+
+            DateTime dataValidade = new DateTime(2025, 06, 20);
+
+            Medicamento medicamento = new Medicamento("Paracetamol", "10mg", "000012X", dataValidade, fornecedor, 10);
+
+            repositorio.Cadastrar(medicamento);
         }
     }
 }

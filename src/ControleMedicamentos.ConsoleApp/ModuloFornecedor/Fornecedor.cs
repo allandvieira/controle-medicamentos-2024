@@ -1,41 +1,40 @@
 ﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
-using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
 {
-    internal class Fornecedor : Entidade
+    internal class Fornecedor : EntidadeBase
     {
         public string Nome { get; set; }
-        public string Endereco { get; set; }
         public string Telefone { get; set; }
+        public string CNPJ { get; set; }
 
-        public Fornecedor(string nome, string endereco, string telefone)
+        public Fornecedor(string nome, string telefone, string cnpj)
         {
             Nome = nome;
-            Endereco = endereco;
             Telefone = telefone;
+            CNPJ = cnpj;
         }
 
-        public override string[] Validar()
+        public override ArrayList Validar()
         {
-            string[] erros = new string[3];
-            int contadorErros = 0;
+            ArrayList erros = new ArrayList();
 
-            if (Nome.Length < 3)
-                erros[contadorErros++] = "O Nome do Paciente precisa conter ao menos 3 caracteres";
+            if (string.IsNullOrEmpty(Nome.Trim()))
+                erros.Add("O campo \"nome\" é obrigatório");
 
-            if (Endereco.Length < 5)
-                erros[contadorErros++] = "O Endereço do Paciente precisa conter ao menos 5 caracteres";
+            if (string.IsNullOrEmpty(Telefone.Trim()))
+                erros.Add("O campo \"telefone\" é obrigatório");
 
-            Regex regexTelefone = new Regex(@"^\d{2} \d{4}-\d{4}$");
-            if (!regexTelefone.IsMatch(Telefone))
-                erros[contadorErros++] = "Preencha o telefone conforme este exemplo: '49 99876-1234'";
+            if (string.IsNullOrEmpty(CNPJ.Trim()))
+                erros.Add("O campo \"CPNJ\" é obrigatório");
 
-            string[] errosFiltrados = new string[contadorErros];
+            return erros;
+        }
 
-            Array.Copy(erros, errosFiltrados, contadorErros);
-
-            return errosFiltrados;
+        public override void AtualizarRegistro(EntidadeBase novoegistro)
+        {
+            throw new NotImplementedException();
         }
     }
 }

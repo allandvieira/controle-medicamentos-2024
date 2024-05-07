@@ -1,9 +1,9 @@
 ﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
 using System.Collections;
 
-namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
+namespace ControleMedicamentos.ConsoleApp.ModuloFuncionario
 {
-    internal class TelaFornecedor : TelaBase
+    internal class TelaFuncionario : TelaBase
     {
         public override void VisualizarRegistros(bool exibirTitulo)
         {
@@ -11,23 +11,26 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
             {
                 ApresentarCabecalho();
 
-                Console.WriteLine("Visualizando Fornecedores...");
+                Console.WriteLine("Visualizando Funcionários...");
             }
 
             Console.WriteLine();
 
             Console.WriteLine(
                 "{0, -10} | {1, -20} | {2, -20} | {3, -20}",
-                "Id", "Nome", "Telefone", "CNPJ"
+                "Id", "Nome", "Telefone", "CPF"
             );
 
-            ArrayList fornecedoresCadastrados = repositorio.SelecionarTodos();
+            ArrayList funcionariosCadastrados = repositorio.SelecionarTodos();
 
-            foreach (Fornecedor fornecedor in fornecedoresCadastrados)
+            foreach (Funcionario funcionario in funcionariosCadastrados)
             {
+                if (funcionario == null)
+                    continue;
+
                 Console.WriteLine(
                     "{0, -10} | {1, -20} | {2, -20} | {3, -20}",
-                    fornecedor.Id, fornecedor.Nome, fornecedor.Telefone, fornecedor.CNPJ
+                    funcionario.Id, funcionario.Nome, funcionario.Telefone, funcionario.CPF
                 );
             }
 
@@ -43,17 +46,17 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
             Console.Write("Digite o telefone: ");
             string telefone = Console.ReadLine();
 
-            Console.Write("Digite o CNPJ: ");
-            string cnpj = Console.ReadLine();
+            Console.Write("Digite o CPF: ");
+            string cpf = Console.ReadLine();
 
-            return new Fornecedor(nome, telefone, cnpj);
+            return new Funcionario(nome, telefone, cpf);
         }
 
         public void CadastrarEntidadeTeste()
         {
-            Fornecedor fornecedor = new Fornecedor("Johnson & Johnson", "21 3222-1252", "00.511.320/0001-50");
+            Funcionario funcionario = new Funcionario("Juninho", "49 99882-0251", "012.100.299-50");
 
-            repositorio.Cadastrar(fornecedor);
+            repositorio.Cadastrar(funcionario);
         }
     }
 }
