@@ -1,6 +1,4 @@
-﻿
-
-using ControleMedicamentos.ConsoleApp.Compartilhado;
+﻿using ControleMedicamentos.ConsoleApp.Compartilhado;
 using System.Collections;
 
 namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
@@ -34,9 +32,13 @@ namespace ControleMedicamentos.ConsoleApp.ModuloPaciente
             return erros;
         }
 
-        public override void AtualizarRegistro(EntidadeBase novoegistro)
+        public override void AtualizarRegistro(EntidadeBase novoRegistro)
         {
-            throw new NotImplementedException();
+            Paciente novasInformacoes = (Paciente)novoRegistro;
+
+            this.Nome = novasInformacoes.Nome;
+            this.Telefone = novasInformacoes.Telefone;
+            this.CartaoSus = novasInformacoes.CartaoSus;
         }
     }
 }

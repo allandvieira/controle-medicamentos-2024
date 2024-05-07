@@ -47,9 +47,14 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao.Saida
             return true;
         }
 
-        public override void AtualizarRegistro(EntidadeBase novoegistro)
+        public override void AtualizarRegistro(EntidadeBase novoRegistro)
         {
-            throw new NotImplementedException();
+            RequisicaoSaida novasInformacoes = (RequisicaoSaida)novoRegistro;
+
+            this.Medicamento = novasInformacoes.Medicamento;
+            this.Paciente = novasInformacoes.Paciente;
+            this.DataRequisicao = novasInformacoes.DataRequisicao;
+            this.QuantidadeRetirada = novasInformacoes.QuantidadeRetirada;
         }
     }
 }

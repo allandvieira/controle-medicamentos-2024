@@ -32,9 +32,13 @@ namespace ControleMedicamentos.ConsoleApp.ModuloFornecedor
             return erros;
         }
 
-        public override void AtualizarRegistro(EntidadeBase novoegistro)
+        public override void AtualizarRegistro(EntidadeBase novoRegistro)
         {
-            throw new NotImplementedException();
+            Fornecedor novasInformacoes = (Fornecedor)novoRegistro;
+
+            this.Nome = novasInformacoes.Nome;
+            this.Telefone = novasInformacoes.Telefone;
+            this.CNPJ = novasInformacoes.CNPJ;
         }
     }
 }

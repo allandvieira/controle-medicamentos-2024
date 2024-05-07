@@ -42,9 +42,14 @@ namespace ControleMedicamentos.ConsoleApp.ModuloRequisicao.Entrada
             Medicamento.Quantidade += QuantidadeRequisitada;
         }
 
-        public override void AtualizarRegistro(EntidadeBase novoegistro)
+        public override void AtualizarRegistro(EntidadeBase novoRegistro)
         {
-            throw new NotImplementedException();
+            RequisicaoEntrada novasInformacoes = (RequisicaoEntrada)novoRegistro;
+
+            this.Medicamento = novasInformacoes.Medicamento;
+            this.Funcionario = novasInformacoes.Funcionario;
+            this.DataRequisicao = novasInformacoes.DataRequisicao;
+            this.QuantidadeRequisitada = novasInformacoes.QuantidadeRequisitada;
         }
     }
 }
